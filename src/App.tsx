@@ -1,87 +1,48 @@
+import { BrowserRouter, Routes, Route } from 'react-router'
 import './App.css'
-import {useState} from "react";
-import {presetGroup} from "./data/preset1.json"
-import { students } from "./data/students.json"
+import Home from './pages/Home'
+import EditStudents from './pages/EditStudents'
+import SetPreferredGroups from './pages/SetPreferredGroups'
+import Randomizer from './pages/Randomizer'
+import { createContext, useState } from 'react'
+import { Group, Student } from './types'
 
-function Shuffled({ shuffledGroups }) {
-    return (
-        <ul className="flex flex-wrap gap-8">
-           {shuffledGroups.map((group, index) => {
-               return <ul className="grid grid-rows-5 grid-flow-col gap-4">
-                   <li className="font-bold text-xl" key={index}>{"Group " + (index+1)}</li>
-                   {group.members.map((student, index2) => {
-                       return <li key={index2} className="w-72 text-xl outline outline-1 outline-cyan-600">{student}</li>
-                   })}
-               </ul>
-           })}
-        </ul>
-    )
+const DEFAULT_APP_CONTEXT = {
+    students: [] as Student[],
+    setStudents: (_students: Student[]) => {},
+    groupAmount: 4,
+    setGroupAmount: (_amount: number) => {},
+    preferredGroups: [] as Group[],
+    setPreferredGroups: (_groups: Group[]) => {}
 }
 
-function StudentList({ students, onRandomize }) {
-
-    return (
-        <>
-            <ul className="grid grid-cols-4 gap-4">
-                {students.map((student, i) => {
-                    return <li
-                        className="w-72 text-xl outline outline-1 outline-cyan-600"
-                        key={i}
-                    >
-                        {student}
-                    </li>
-                })}
-            </ul>
-            <button className="mt-24 text-3xl font-bold outline outline-1 outline-white" onClick={onRandomize} onContextMenu={onRandomize}>Randomize</button>
-        </>
-    )
-}
+export const AppContext = createContext(DEFAULT_APP_CONTEXT);
 
 function App() {
-    const [randomized, setRandomized] = useState(false)
-    const [groups, setGroups] = useState(presetGroup)
-
-    function generateRandomGroup() {
-        let studentsLeft = students
-        let groups = []
-        let group = []
-        while(studentsLeft.length > 0) {
-            const index = Math.floor(Math.random()*studentsLeft.length)
-            group.push(studentsLeft[index])
-            studentsLeft.splice(index, 1)
-            if(group.length === 4) {
-                groups.push({"members": group})
-                group = []
-            }
-        }
-        if(group.length > 0) {
-            groups.push({"members": group})
-        }
-        return groups;
-    }
-
-    const onRandomize = (e) => {
-        if(e.type === "click") {
-            console.log("Hi");
-            // setGroups([{
-            //     "members": [
-            //         "Hi"
-            //     ]
-            // }])
-            setGroups(generateRandomGroup())
-        } else if(e.type === "contextmenu") {
-            setGroups(presetGroup)
-        }
-        setRandomized(true)
-
-    }
+    const [students, setStudents] = useState(JSON.parse(localStorage.getItem("students") || "[]") as Student[]);
+    const [groupAmount, setGroupAmount] = useState(localStorage.getItem("groupAmount") ? parseInt(localStorage.getItem("groupAmount") || "4") : 4);
+    const [preferredGroups, setPreferredGroups] = useState(JSON.parse(localStorage.getItem("preferredGroups") || "[]") as Group[]);
 
     return (
-    <>
-      <main>
-          {randomized ? <Shuffled shuffledGroups={groups}/> : <StudentList students={students} onRandomize={onRandomize}/>}
-      </main>
-    </>
+        <AppContext.Provider value = {
+            {
+                students,
+                setStudents,
+                groupAmount,
+                setGroupAmount,
+                preferredGroups,
+                setPreferredGroups
+            }
+        }>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/students" element={<EditStudents />} />
+                    <Route path="/setpreferredgroups" element={<SetPreferredGroups />} />
+                    <Route path="/randomizer" element={<Randomizer />} />
+                </Routes>
+            </BrowserRouter>
+        </AppContext.Provider>
     )
 }
 
