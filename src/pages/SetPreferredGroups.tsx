@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import App, { AppContext } from "../App";
+import { AppContext } from "../App";
+import StudentDnD from "../components/StudentDnD";
 
 export default function SetPreferredGroups() {
     const appContext = useContext(AppContext);
@@ -21,7 +22,7 @@ export default function SetPreferredGroups() {
                 <p>Warning: The amount of groups is not a whole number. Some groups will have one more student than others.</p>
                 <p>The extra group will have: {appContext.students.length % appContext.groupAmount} students.</p>
             </>}
-            <ul className="grid grid-cols-4 gap-4">
+            {/* <ul className="grid grid-cols-4 gap-4">
                 {appContext.students.map((student, i) => {
                     return <li
                         className="w-72 text-xl outline outline-1 outline-cyan-600"
@@ -30,7 +31,8 @@ export default function SetPreferredGroups() {
                         {student}
                     </li>
                 })}
-            </ul>
+            </ul> */}
+            <StudentDnD />
         </div>
     )
 }

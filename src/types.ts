@@ -1,7 +1,5 @@
 type Student = string;
-type Group = {
-    members: Student[];
-};
+type Group = Student[];
 
 type StudentContextData = {
     students: Student[];
