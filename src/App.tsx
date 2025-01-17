@@ -23,7 +23,6 @@ export const AppContext = createContext(DEFAULT_APP_CONTEXT);
 function App() {
     const [students, setStudents] = useState(JSON.parse(localStorage.getItem("students") || "[]") as Student[]);
     const [groupAmount, setGroupAmount] = useState(localStorage.getItem("groupAmount") ? parseInt(localStorage.getItem("groupAmount") || "4") : 4);
-    console.log(localStorage.getItem("preferredGroups"))
     const [preferredGroups, setPreferredGroups] = useState(JSON.parse(localStorage.getItem("preferredGroups") || "[]") as Group[]);
     const [onlyShowFirstName, setOnlyShowFirstName] = useState(JSON.parse(localStorage.getItem("onlyShowFirstName") || "false") as boolean);
 

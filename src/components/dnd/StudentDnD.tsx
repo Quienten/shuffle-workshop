@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { DragStartEvent, DragOverEvent, DragEndEvent, DragCancelEvent } from '@dnd-kit/core';
+import { DragStartEvent, DragOverEvent, DragEndEvent, DragCancelEvent, UniqueIdentifier } from '@dnd-kit/core';
 import {
     DndContext,
     closestCenter,
@@ -19,7 +19,8 @@ import Container from './Container';
 // Watch out! the index of a group can be 0 which is falsy
 export default function StudentDnD() {
     const appContext = useContext(AppContext)
-    const [activeId, setActiveId] = useState(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -71,17 +72,17 @@ export default function StudentDnD() {
         const { id } = active;
 
         setActiveId(id);
-        console.log(`Picked up draggable item ${id}.`);
+        //console.log(`Picked up draggable item ${id}.`);
     }
 
     function handleDragOver(event: DragOverEvent) {
-        const { active, over, draggingRect } = event;
+        const { active, over } = event;
         const { id } = active;
-        const { id: overId } = over;
+        const { id: overId } = over!;
 
         // Find the containers
-        const activeContainer = findContainer(id);
-        const overContainer = findContainer(overId);
+        const activeContainer = findContainer(id as string);
+        const overContainer = findContainer(overId as string);
 
         if (
             activeContainer === undefined ||
@@ -94,46 +95,45 @@ export default function StudentDnD() {
         const activeItems = appContext.preferredGroups[activeContainer]
         const overItems = appContext.preferredGroups[overContainer]
 
-        const activeIndex = activeItems.indexOf(id);
-        const overIndex = overItems.indexOf(overId);
+        const activeIndex = activeItems.indexOf(id as string);
+        const overIndex = overItems.indexOf(overId as string);
 
         let newIndex;
         if (overId in appContext.preferredGroups) {
             // We're at the root droppable of a container
             newIndex = overItems.length + 1;
         } else {
-            const isBelowLastItem =
-                over &&
-                overIndex === overItems.length - 1 &&
-                draggingRect?.offsetTop > over.rect.offsetTop + over.rect.height;
+            // const isBelowLastItem =
+            //     over &&
+            //     overIndex === overItems.length - 1 &&
+            //     event.delta.y > over.rect.top + over.rect.height;
 
-            const modifier = isBelowLastItem ? 1 : 0;
+            // const modifier = isBelowLastItem ? 1 : 0;
+            const modifier = 0;
 
             newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
         }
 
         const newPreferredGroups = appContext.preferredGroups.map(group => group.slice());
         newPreferredGroups[activeContainer].splice(activeIndex, 1);
-        newPreferredGroups[overContainer].splice(newIndex, 0, id);
+        newPreferredGroups[overContainer].splice(newIndex, 0, id as string);
         appContext.setPreferredGroups(newPreferredGroups);
         localStorage.setItem("preferredGroups", JSON.stringify(newPreferredGroups));
 
         if (overId) {
-            console.log(
-              `Draggable item ${id} was moved over droppable area ${overId}.`
-            );
+            //console.log(`Draggable item ${id} was moved over droppable area ${overId}.`);
         } else {
-            console.log(`Draggable item ${id} is no longer over a droppable area.`);
+            //console.log(`Draggable item ${id} is no longer over a droppable area.`);
         }
     }
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         const { id } = active;
-        const { id: overId } = over;
+        const { id: overId } = over!;
 
-        const activeContainer = findContainer(id);
-        const overContainer = findContainer(overId);
+        const activeContainer = findContainer(id as string);
+        const overContainer = findContainer(overId as string);
 
         if (
             !activeContainer ||
@@ -143,8 +143,8 @@ export default function StudentDnD() {
             return;
         }
 
-        const activeIndex = appContext.preferredGroups[activeContainer].indexOf(active.id);
-        const overIndex = appContext.preferredGroups[overContainer].indexOf(overId);
+        const activeIndex = appContext.preferredGroups[activeContainer].indexOf(active.id as string);
+        const overIndex = appContext.preferredGroups[overContainer].indexOf(overId as string);
 
         if (activeIndex !== overIndex) {
             const newPreferredGroups = appContext.preferredGroups.map(group => group.slice());
@@ -156,17 +156,15 @@ export default function StudentDnD() {
         setActiveId(null);
 
         if(overId) {
-            console.log(
-                `Draggable item ${id} was dropped over droppable area ${overId}`
-              );
+            //console.log(`Draggable item ${id} was dropped over droppable area ${overId}`);
         } else {
-            console.log(`Draggable item ${id} was dropped.`);
+            //console.log(`Draggable item ${id} was dropped.`);
         }
     }
 
     function handleDragCancel(event: DragCancelEvent) {
         const { id } = event.active;
         setActiveId(null);
-        console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
+        //console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
     }
 }

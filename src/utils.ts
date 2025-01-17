@@ -28,7 +28,7 @@ export const initializePreferredGroups = (students: Student[], amountPerGroup: n
         // Add the group to the result
         result.push(group)
     }
-    console.log(result)
+    //console.log(result)
     return result
 }
 

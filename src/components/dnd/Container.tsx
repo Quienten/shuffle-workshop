@@ -1,5 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import {
+  rectSortingStrategy,
   SortableContext,
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
@@ -19,9 +20,9 @@ export default function Container({ index, text, id, items } : {index: number, t
     <SortableContext
       id={id}
       items={items}
-      strategy={verticalListSortingStrategy}
+      strategy={rectSortingStrategy}
     >
-      <div ref={setNodeRef} className="bg-slate-700 p-4 m-2 flex flex-col rounded-sm">
+      <div ref={setNodeRef} className="bg-slate-700 w-48 p-4 m-2 flex flex-col rounded-sm">
         <div className="flex justify-center items-center">
           <h2 className="text-white text-center text-lg font-bold mb-2 underline">{text}</h2>
           <div className={"ml-4 w-5 h-5 translate-x-1/2 -translate-y-1 " + CONTAINER_COLORS[index]}></div>
