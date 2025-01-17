@@ -162,8 +162,8 @@ export default function StudentDnD() {
         }
     }
 
-    function handleDragCancel(event: DragCancelEvent) {
-        const { id } = event.active;
+    function handleDragCancel(_: DragCancelEvent) {
+        //const { id } = event.active;
         setActiveId(null);
         //console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);
     }

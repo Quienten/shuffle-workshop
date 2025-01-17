@@ -2,7 +2,6 @@ import { useDroppable } from "@dnd-kit/core";
 import {
   rectSortingStrategy,
   SortableContext,
-  verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 
 import { SortableItem } from "./SortableItem";
