@@ -40,7 +40,7 @@ function App() {
             }
         }>
             <NavBar />
-            <BrowserRouter>
+            <BrowserRouter basename='/shuffle-workshop'>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/students" element={<EditStudents />} />
