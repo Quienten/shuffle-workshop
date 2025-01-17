@@ -1,6 +1,9 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {presetGroup} from "../data/preset1.json"
 import { students } from "../data/students.json"
+import { AppContext } from "../App";
+import { generateRandomGroup } from "../utils";
+import { Group } from "../types";
 
 function Shuffled({ shuffledGroups }) {
     return (
@@ -8,7 +11,7 @@ function Shuffled({ shuffledGroups }) {
            {shuffledGroups.map((group, index) => {
                return <ul className="grid grid-rows-5 grid-flow-col gap-4">
                    <li className="font-bold text-xl" key={index}>{"Group " + (index+1)}</li>
-                   {group.members.map((student, index2) => {
+                   {group.map((student, index2) => {
                        return <li key={index2} className="w-72 text-xl outline outline-1 outline-cyan-600">{student}</li>
                    })}
                </ul>
@@ -17,12 +20,12 @@ function Shuffled({ shuffledGroups }) {
     )
 }
 
-function StudentList({ students, onRandomize }) {
-
+function StudentList() {
+    const appContext = useContext(AppContext)
     return (
         <>
             <ul className="grid grid-cols-4 gap-4">
-                {students.map((student, i) => {
+                {appContext.students.map((student, i) => {
                     return <li
                         className="w-72 text-xl outline outline-1 outline-cyan-600"
                         key={i}
@@ -31,54 +34,32 @@ function StudentList({ students, onRandomize }) {
                     </li>
                 })}
             </ul>
-            <button className="mt-24 text-3xl font-bold outline outline-1 outline-white" onClick={onRandomize} onContextMenu={onRandomize}>Randomize</button>
         </>
     )
 }
 
 export default function Randomizer() {
+    const appContext = useContext(AppContext)
     const [randomized, setRandomized] = useState(false)
-    const [groups, setGroups] = useState(presetGroup)
+    const [groups, setGroups] = useState([] as Group[])
 
-    function generateRandomGroup() {
-        let studentsLeft = students
-        let groups = []
-        let group = []
-        while(studentsLeft.length > 0) {
-            const index = Math.floor(Math.random()*studentsLeft.length)
-            group.push(studentsLeft[index])
-            studentsLeft.splice(index, 1)
-            if(group.length === 4) {
-                groups.push({"members": group})
-                group = []
-            }
-        }
-        if(group.length > 0) {
-            groups.push({"members": group})
-        }
-        return groups;
-    }
 
-    const onRandomize = (e) => {
-        if(e.type === "click") {
-            console.log("Hi");
-            // setGroups([{
-            //     "members": [
-            //         "Hi"
-            //     ]
-            // }])
-            setGroups(generateRandomGroup())
-        } else if(e.type === "contextmenu") {
-            setGroups(presetGroup)
+
+    const onRandomize = (event) => {
+        if(event.type === "click") {
+            setGroups(generateRandomGroup(appContext.students, appContext.groupAmount))
+        } else if(event.type === "contextmenu") {
+            event.preventDefault()
+            setGroups(appContext.preferredGroups)
         }
         setRandomized(true)
-
     }
 
     return (
     <>
       <main>
-          {randomized ? <Shuffled shuffledGroups={groups}/> : <StudentList students={students} onRandomize={onRandomize}/>}
+          {randomized ? <Shuffled shuffledGroups={groups}/> : <StudentList/>}
+          <button className="mt-24 text-3xl font-bold outline outline-1 outline-white" onClick={onRandomize} onContextMenu={onRandomize}>Randomize</button>
       </main>
     </>
     )

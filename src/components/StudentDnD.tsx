@@ -43,7 +43,7 @@ export default function StudentDnD() {
         <div style={wrapperStyle}>
             <DndContext
                 sensors={sensors}
-                collisionDetection={closestCorners}
+                collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
@@ -59,7 +59,7 @@ export default function StudentDnD() {
                         />
                     )
                 })}
-                <DragOverlay>{activeId ? <Item text={activeId} /> : null}</DragOverlay>
+                {/* <DragOverlay>{activeId ? <Item text={activeId} /> : null}</DragOverlay> */}
             </DndContext >
         </div>
     );

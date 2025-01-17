@@ -32,4 +32,23 @@ const initializePreferredGroups = (students: Student[], amountPerGroup: number) 
     return result
 }
 
-export { initializePreferredGroups }
+function generateRandomGroup(students: Student[], amountPerGroup: number) {
+    const studentsLeft = students.slice()
+    const groups = [] as Group[]
+    let group = []
+    while(studentsLeft.length > 0) {
+        const index = Math.floor(Math.random()*studentsLeft.length)
+        group.push(studentsLeft[index])
+        studentsLeft.splice(index, 1)
+        if(group.length === amountPerGroup) {
+            groups.push(group)
+            group = []
+        }
+    }
+    if(group.length > 0) {
+        groups.push(group)
+    }
+    return groups;
+}
+
+export { initializePreferredGroups, generateRandomGroup }

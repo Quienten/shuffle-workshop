@@ -10,6 +10,7 @@ export default function Home() {
             <ul>
                 <li><a href="/students">Edit Students</a></li>
                 <li><a href="/setpreferredgroups">Edit Preferred Groups</a></li>
+                <li><a href="/randomizer">Randomizer</a></li>
             </ul>
         </div>
     );
