@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { DragStartEvent, DragOverEvent, DragEndEvent, DragCancelEvent } from '@dnd-kit/core';
 import {
     DndContext,
     closestCenter,
@@ -12,13 +13,8 @@ import {
     sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 
-import { AppContext } from '../App';
+import { AppContext } from '../../App';
 import Container from './Container';
-
-const wrapperStyle = {
-    display: "flex",
-    flexDirection: "row",
-};
 
 // Watch out! the index of a group can be 0 which is falsy
 export default function StudentDnD() {
@@ -34,36 +30,35 @@ export default function StudentDnD() {
 
 
     return (
-        <div style={wrapperStyle}>
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-                onDragCancel={handleDragCancel}
-            >
+        <main>
+            <div className={"flex"}>
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDragEnd={handleDragEnd}
+                    onDragCancel={handleDragCancel}
+                >
 
-                {appContext.preferredGroups.map((group, groupIndex) => {
-                    return (
-                        <Container
-                            id={'group-' + groupIndex}
-                            key={groupIndex}
-                            items={group}
-                        />
-                    )
-                })}
-                {/* <DragOverlay>{activeId ? <Item text={activeId} /> : null}</DragOverlay> */}
-            </DndContext >
-        </div>
+                    {appContext.preferredGroups.map((group, groupIndex) => {
+                        return (
+                            <Container
+                                index={groupIndex}
+                                text={'Group ' + (groupIndex + 1)}
+                                id={'group-' + groupIndex}
+                                key={groupIndex}
+                                items={group}
+                            />
+                        )
+                    })}
+                    {/* <DragOverlay>{activeId ? <Item text={activeId} /> : null}</DragOverlay> */}
+                </DndContext >
+            </div>
+        </main>
     );
 
     function findContainer(id: string) {
-        // if (id.includes("group")) {
-        //     return id;
-        // }
-
-        // return appContext.preferredGroups.find((group) => group.includes(id));
         if (id.includes("group-")) {
             return parseInt(id.substring(6));
         }
@@ -71,7 +66,7 @@ export default function StudentDnD() {
         return appContext.preferredGroups.findIndex((group) => group.includes(id));
     }
 
-    function handleDragStart(event) {
+    function handleDragStart(event: DragStartEvent) {
         const { active } = event;
         const { id } = active;
 
@@ -79,7 +74,7 @@ export default function StudentDnD() {
         console.log(`Picked up draggable item ${id}.`);
     }
 
-    function handleDragOver(event) {
+    function handleDragOver(event: DragOverEvent) {
         const { active, over, draggingRect } = event;
         const { id } = active;
         const { id: overId } = over;
@@ -95,42 +90,7 @@ export default function StudentDnD() {
         ) {
             return;
         }
-
-        // setItems((prev) => {
-        //     const activeItems = prev[activeContainer];
-        //     const overItems = prev[overContainer];
-
-        //     // Find the indexes for the items
-        //     const activeIndex = activeItems.indexOf(id);
-        //     const overIndex = overItems.indexOf(overId);
-
-        //     let newIndex;
-        //     if (overId in prev) {
-        //         // We're at the root droppable of a container
-        //         newIndex = overItems.length + 1;
-        //     } else {
-        //         const isBelowLastItem =
-        //             over &&
-        //             overIndex === overItems.length - 1 &&
-        //             draggingRect.offsetTop > over.rect.offsetTop + over.rect.height;
-
-        //         const modifier = isBelowLastItem ? 1 : 0;
-
-        //         newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
-        //     }
-
-        //     return {
-        //         ...prev,
-        //         [activeContainer]: [
-        //             ...prev[activeContainer].filter((item) => item !== active.id),
-        //         ],
-        //         [overContainer]: [
-        //             ...prev[overContainer].slice(0, newIndex),
-        //             items[activeContainer][activeIndex],
-        //             ...prev[overContainer].slice(newIndex, prev[overContainer].length),
-        //         ],
-        //     };
-        // });
+        
         const activeItems = appContext.preferredGroups[activeContainer]
         const overItems = appContext.preferredGroups[overContainer]
 
@@ -167,7 +127,7 @@ export default function StudentDnD() {
         }
     }
 
-    function handleDragEnd(event) {
+    function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         const { id } = active;
         const { id: overId } = over;
@@ -187,14 +147,6 @@ export default function StudentDnD() {
         const overIndex = appContext.preferredGroups[overContainer].indexOf(overId);
 
         if (activeIndex !== overIndex) {
-            // setItems((items) => ({
-            //     ...items,
-            //     [overContainer]: arrayMove(
-            //         items[overContainer],
-            //         activeIndex,
-            //         overIndex
-            //     ),
-            // }));
             const newPreferredGroups = appContext.preferredGroups.map(group => group.slice());
             newPreferredGroups[overContainer] = arrayMove(newPreferredGroups[overContainer], activeIndex, overIndex);
             appContext.setPreferredGroups(newPreferredGroups);
@@ -212,7 +164,7 @@ export default function StudentDnD() {
         }
     }
 
-    function handleDragCancel(event) {
+    function handleDragCancel(event: DragCancelEvent) {
         const { id } = event.active;
         setActiveId(null);
         console.log(`Dragging was cancelled. Draggable item ${id} was dropped.`);

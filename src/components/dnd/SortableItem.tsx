@@ -1,22 +1,14 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { AppContext } from '../../App';
+import { useContext } from 'react';
 
 export function Item({ text }: { text: string }) {
-  
-    const style = {
-      width: "100%",
-      height: 50,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      border: "1px solid black",
-      margin: "10px 0",
-    };
-  
-    return <div style={style}>{text}</div>;
-  }
+    return <div className="w-40 h-12 mb-2 bg-slate-600 flex items-center justify-center border border-gray-800 rounded-lg hover:cursor-move">{text}</div>;
+}
 
 export function SortableItem({ id }: { id: string }) {
+    const appContext = useContext(AppContext)
     const {
         attributes,
         listeners,
@@ -31,8 +23,8 @@ export function SortableItem({ id }: { id: string }) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            <Item text={id} />
+        <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+            <Item text={appContext.onlyShowFirstName ? id.split(" ")[0] : id} />
         </div>
     );
 }

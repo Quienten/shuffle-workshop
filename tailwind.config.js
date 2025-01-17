@@ -1,3 +1,5 @@
+import { CONTAINER_COLORS } from './src/utils'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -8,5 +10,6 @@ export default {
     extend: {},
   },
   plugins: [],
+  safelist: CONTAINER_COLORS
 }
 
