@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
 import StudentDnD from "../components/StudentDnD";
+import { initializePreferredGroups } from "../utils";
 
 export default function SetPreferredGroups() {
     const appContext = useContext(AppContext);
@@ -9,6 +10,9 @@ export default function SetPreferredGroups() {
         const newValue = event.target.valueAsNumber;
         appContext.setGroupAmount(newValue);
         localStorage.setItem("groupAmount", newValue.toString());
+        const newPreferredGroups = initializePreferredGroups(appContext.students, newValue)
+        appContext.setPreferredGroups(newPreferredGroups);
+        localStorage.setItem("preferredGroups", JSON.stringify(newPreferredGroups));
     }
 
     return (

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -6,17 +6,12 @@ import {
     PointerSensor,
     useSensor,
     useSensors,
-    DragOverlay,
-    closestCorners,
 } from '@dnd-kit/core';
 import {
     arrayMove,
-    SortableContext,
     sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { Item, SortableItem } from './SortableItem';
 import { AppContext } from '../App';
 import Container from './Container';
 
@@ -28,7 +23,6 @@ const wrapperStyle = {
 // Watch out! the index of a group can be 0 which is falsy
 export default function StudentDnD() {
     const appContext = useContext(AppContext)
-    //const [items, setItems] = useState([1, 2, 3]);
     const [activeId, setActiveId] = useState(null);
 
     const sensors = useSensors(
@@ -162,6 +156,7 @@ export default function StudentDnD() {
         newPreferredGroups[activeContainer].splice(activeIndex, 1);
         newPreferredGroups[overContainer].splice(newIndex, 0, id);
         appContext.setPreferredGroups(newPreferredGroups);
+        localStorage.setItem("preferredGroups", JSON.stringify(newPreferredGroups));
 
         if (overId) {
             console.log(
@@ -203,6 +198,7 @@ export default function StudentDnD() {
             const newPreferredGroups = appContext.preferredGroups.map(group => group.slice());
             newPreferredGroups[overContainer] = arrayMove(newPreferredGroups[overContainer], activeIndex, overIndex);
             appContext.setPreferredGroups(newPreferredGroups);
+            localStorage.setItem("preferredGroups", JSON.stringify(newPreferredGroups));
         }
 
         setActiveId(null);
