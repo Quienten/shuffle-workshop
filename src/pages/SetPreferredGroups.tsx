@@ -27,13 +27,14 @@ export default function SetPreferredGroups() {
                 <h1 className="text-xl font-bold mt-16">Settings</h1>
                 <div>
                     <div className="flex">
-                        <p>Only show first name: </p>
+                        <p>Hide last names: </p>
                         <input type="checkbox" className="ml-2" defaultChecked={appContext.onlyShowFirstName} onChange={updateSetOnlyShowFirstName} />
                     </div>
                 </div>
-                <h1 className="text-xl font-bold mt-16">Set Preferred Groups</h1>
-                <div className="h-36 mt-3">
-                    <p>Amount of students: {appContext.students.length}</p>
+                <div className="h-64 mt-3">
+                    <h1 className="text-xl font-bold mt-16">Set Preferred Groups</h1>
+                    <p>When using the <a className="text-blue-500" href="/randomizer">randomizer</a>, right clicking the randomize button will force the preferred group below.</p>
+                    <p className="mt-3">Amount of students: {appContext.students.length}</p>
                     <span>Students per group: </span>
                     <input type="number" min="1" max="10" defaultValue={appContext.groupAmount} onChange={setGroupAmount}/>
                     <p>Amount of groups: {Math.ceil(appContext.students.length / appContext.groupAmount)}</p>

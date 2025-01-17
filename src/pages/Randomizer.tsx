@@ -1,6 +1,6 @@
 import { MouseEventHandler, useContext, useState } from "react";
 import { AppContext } from "../App";
-import { generateRandomGroup } from "../utils";
+import { CONTAINER_COLORS, generateRandomGroup } from "../utils";
 import { Group } from "../types";
 
 function Shuffled({ shuffledGroups }: { shuffledGroups: Group[] }) {
@@ -9,7 +9,10 @@ function Shuffled({ shuffledGroups }: { shuffledGroups: Group[] }) {
             {shuffledGroups.map((group, index) => {
                 return (
                     <div key={index}>
-                        <h1 className="font-bold text-xl">{"Group " + (index + 1)}</h1>
+                        <div className="flex justify-center items-center">
+                            <h1 className="font-bold text-xl">{"Group " + (index + 1)}</h1>
+                            <div className={"ml-4 w-5 h-5 translate-y-1 " + CONTAINER_COLORS[index]}></div>
+                        </div>
                         <ul className="flex flex-col gap-4 mt-4 justify-center align-middle items-stretch">
                             {group.map((student) => {
                                 return <li key={student} className="w-48 text-xl outline outline-2 outline-cyan-600 text-center rounded-lg bg-gray-800 flex items-center justify-center p-1">{student}</li>
@@ -68,6 +71,7 @@ export default function Randomizer() {
                         {randomized ? <Shuffled shuffledGroups={groups} /> : <StudentList />}
                     </div>
                     <button className="mt-24 text-3xl btn btn-blue" onClick={onRandomize} onContextMenu={onRandomize}>Randomize</button>
+                    {randomized && <button className="mt-4 text-3xl btn btn-blue" onClick={() => setRandomized(false)}>Reset</button>}
                 </div>
             </main>
         </>
