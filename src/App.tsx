@@ -39,8 +39,8 @@ function App() {
                 setOnlyShowFirstName
             }
         }>
-            <NavBar />
             <BrowserRouter basename='/shuffle-workshop'>
+                <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/students" element={<EditStudents />} />

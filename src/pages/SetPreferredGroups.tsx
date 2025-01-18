@@ -3,6 +3,7 @@ import { AppContext } from "../App";
 import StudentDnD from "../components/dnd/StudentDnD";
 import { initializePreferredGroups } from "../utils";
 import { MdOutlineWarning } from "react-icons/md";
+import { Link } from "react-router";
 
 export default function SetPreferredGroups() {
     const appContext = useContext(AppContext);
@@ -33,7 +34,7 @@ export default function SetPreferredGroups() {
                 </div>
                 <div className="h-64 mt-3">
                     <h1 className="text-xl font-bold mt-16">Set Preferred Groups</h1>
-                    <p>When using the <a className="text-blue-500" href="/randomizer">randomizer</a>, right clicking the randomize button will force the preferred group below.</p>
+                    <p>When using the <Link className="text-blue-500" to="/randomizer">randomizer</Link>, right clicking the randomize button will force the preferred group below.</p>
                     <p className="mt-3">Amount of students: {appContext.students.length}</p>
                     <span>Students per group: </span>
                     <input type="number" min="1" max="10" defaultValue={appContext.groupAmount} onChange={setGroupAmount}/>
