@@ -4,6 +4,8 @@ import { CONTAINER_COLORS, generateRandomGroup } from "../utils";
 import { Group } from "../types";
 
 function Shuffled({ shuffledGroups }: { shuffledGroups: Group[] }) {
+    const appContext = useContext(AppContext)
+
     return (
         <ul className="flex flex-wrap gap-8 items-stretch">
             {shuffledGroups.map((group, index) => {
@@ -15,7 +17,7 @@ function Shuffled({ shuffledGroups }: { shuffledGroups: Group[] }) {
                         </div>
                         <ul className="flex flex-col gap-4 mt-4 justify-center align-middle items-stretch">
                             {group.map((student) => {
-                                return <li key={student} className="w-48 text-xl outline outline-2 outline-cyan-600 text-center rounded-lg bg-gray-800 flex items-center justify-center p-1">{student}</li>
+                                return <li key={student} className="w-48 text-xl outline outline-2 outline-cyan-600 text-center rounded-lg bg-gray-800 flex items-center justify-center p-1">{appContext.onlyShowFirstName ? student.split(" ")[0] : student}</li>
                             })}
                         </ul>
                     </div>
@@ -27,6 +29,7 @@ function Shuffled({ shuffledGroups }: { shuffledGroups: Group[] }) {
 
 function StudentList() {
     const appContext = useContext(AppContext)
+    
     return (
         <>
             <ul className="flex flex-wrap gap-4 mt-4 justify-center align-middle items-stretch">
